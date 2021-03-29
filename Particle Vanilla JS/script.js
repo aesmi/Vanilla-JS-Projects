@@ -93,8 +93,6 @@ function init() {
     }
 }
 
-init();
-
 // this is our loop for running our functions at our refresh rate, quite useful function when making games later on
 function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -108,7 +106,10 @@ function animate() {
     requestAnimationFrame(animate);
 }
 
+
+init();
 animate();
+
 
 function connect() {
     for (let a = 0; a < particleArray.length; a++) {

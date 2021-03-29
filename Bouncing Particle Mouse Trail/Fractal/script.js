@@ -8,7 +8,7 @@ canvas.height = window.innerHeight;
 
 // set array
 let particleArray = [];
-const numberOfParticles = 10;
+const numberOfParticles = 75;
 
 const mouse = {
     x: null,
@@ -23,7 +23,7 @@ window.addEventListener('mousemove', function (event) {
 setInterval(function () {
     mouse.x = undefined;
     mouse.y = undefined;
-}, 200);
+}, 100);
 
 // create Particle class
 class Particle {
@@ -43,11 +43,11 @@ class Particle {
     }
     // update state of our object
     update() {
-        this.size -= 0.05;
+        this.size -= 0.1;
         if (this.size < 0) {
             this.x = (mouse.x + (Math.random() * 20) - 10);
             this.y = (mouse.y + (Math.random() * 20) - 10);
-            this.size = (Math.random() * 12) + 20;
+            this.size = (Math.random() * 5) + 5;
             this.weight = (Math.random() * 2) - 0.5;
         }
         this.y += this.weight;
@@ -81,10 +81,32 @@ function animate() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < particleArray.length; i++) {
         particleArray[i].update();
-        particleArray[i].draw();
+        //particleArray[i].draw();
     }
+    connect();
     requestAnimationFrame(animate);
 }
 
 init();
 animate();
+
+function connect() {
+    let opacityValue = 1;
+    for (let a = 0; a < particleArray.length; a++) {
+        for (let b = a; b < particleArray.length; b++) {
+            let dx = particleArray[a].x - particleArray[b].x;
+            let dy = particleArray[a].y - particleArray[b].y;
+            let distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 100) {
+                opacityValue = 1 - (distance/10000);
+                ctx.strokeStyle = `rgba(255,255,255,` + opacityValue + ')';
+                ctx.beginPath();
+                ctx.lineWidth=1;
+                ctx.moveTo(particleArray[a].x, particleArray[a].y);
+                ctx.lineTo(particleArray[b].x, particleArray[b].y);
+                ctx.stroke();
+            }
+        }
+    }
+}
